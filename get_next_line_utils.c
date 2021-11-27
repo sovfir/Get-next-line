@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gjacinta <gjacinta@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/27 15:27:41 by gjacinta          #+#    #+#             */
+/*   Updated: 2021/11/27 17:20:51 by gjacinta         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 size_t	ft_strlen(const char *str)
@@ -10,6 +22,31 @@ size_t	ft_strlen(const char *str)
 		i++;
 	}
 	return (i);
+}
+
+char	*ft_strjoin(char *memory, char *buffer)
+{
+	char	*new;
+	int		i;
+
+	if (memory == NULL)
+	{
+		memory = malloc(sizeof(char) * 1);
+		if (memory == NULL)
+			return (NULL);
+		memory[0] = '\0';
+	}
+	if (buffer == NULL)
+		return (NULL);
+	new = malloc(sizeof(char)
+			* (ft_strlen(memory) + ft_strlen(buffer) + 1));
+	if (new == NULL)
+		return (NULL);
+	ft_memcpy(new, memory, (ft_strlen(memory) + 1));
+	i = ft_strlen(new);
+	ft_memcpy(&new[i], buffer, (ft_strlen(buffer) + 1));
+	free(memory);
+	return (new);
 }
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
@@ -28,41 +65,16 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-char	*ft_new_strjoin(char *save_line, char *rd_buffer)
-{
-	char	*new;
-	int		i;
-
-	if (save_line == NULL)
-	{
-		save_line = malloc(sizeof(char) * 1);
-		if (save_line == NULL)
-			return (NULL);
-		save_line[0] = '\0';
-	}
-	if (rd_buffer == NULL)
-		return (NULL);
-	new = malloc(sizeof(char)
-			* (ft_strlen(save_line) + ft_strlen(rd_buffer) + 1));
-	if (new == NULL)
-		return (NULL);
-	ft_memcpy(new, save_line, (ft_strlen(save_line) + 1));
-	i = ft_strlen(new);
-	ft_memcpy(&new[i], rd_buffer, (ft_strlen(rd_buffer) + 1));
-	free(save_line);
-	return (new);
-}
-
-int	has_new_line(char *save_line)
+int	find_new_line(char *memory)
 {
 	int	i;
 
-	if (save_line == NULL)
+	if (memory == NULL)
 		return (0);
 	i = 0;
-	while (save_line[i] != '\0')
+	while (memory[i])
 	{
-		if (save_line[i] == '\n')
+		if (memory[i] == '\n')
 			return (1);
 		i++;
 	}

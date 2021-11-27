@@ -3,104 +3,104 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gjacinta <gjacinta@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: gjacinta <gjacinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/24 19:40:57 by gjacinta          #+#    #+#             */
-/*   Updated: 2021/11/25 16:13:02 by gjacinta         ###   ########.fr       */
+/*   Created: 2021/11/27 15:11:15 by gjacinta          #+#    #+#             */
+/*   Updated: 2021/11/27 17:54:42 by gjacinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*delete_clear_line(char *final_line)
+char	*delete_line(char	*memory)
 {
-	char	*new_save_line;
+	char	new_memory;
 	size_t	i;
-	size_t	c;
+	size_t	count;
 
-	if (final_line == NULL)
+	if (!memory)
 		return (NULL);
 	i = 0;
-	while (final_line[i] != '\0' && final_line[i] != '\n')
+	while (memory[i] != '\0' && memory[i] != '\n')
 		i++;
-	if (final_line[i] == '\0')
+	if (memory[i] == '\0')
 	{
-		free(final_line);
+		free(memory);
 		return (NULL);
 	}
-	new_save_line = malloc(sizeof(char) * (ft_strlen(final_line) - i + 1));
-	if (new_save_line == NULL)
+	new_memory = malloc(sizeof(char) * (ft_strlen(memory) - i + 1));
+	if (!new_memory)
 		return (NULL);
-	c = 0;
+	count = 0;
 	i++;
-	while (final_line[i] != '\0')
-		new_save_line[c++] = final_line[i++];
-	new_save_line[c] = '\0';
-	free(final_line);
-	return (new_save_line);
+	while (memory[i] != '\0')
+		new_memory[count++] = memory[i++];
+	new_memory[count] = '\0';
+	free(memory);
+	return (new_memory);
 }
 
-char	*clear_save_line(char *final_line)
+char	*clear_line(char	*memory)
 {
 	char	*line;
 	int		i;
-	int		c;
+	int		count;
 
 	i = 0;
-	if (final_line[i] == '\0')
+	if (memory[i] == '\0')
 		return (NULL);
-	while (final_line[i] != '\0' && final_line[i] != '\n')
+	while (memory[i] != '\0' && memory[i] != '\n')
 		i++;
 	line = malloc(sizeof(char) * (i + 2));
-	if (line == NULL)
+	if (!line)
 		return (NULL);
 	i = 0;
-	c = 0;
-	while (final_line[i] != '\0' && final_line[i] != '\n')
-		line[c++] = final_line[i++];
-	if (final_line[i] == '\n')
-		line[c++] = final_line[i++];
-	line[c] = '\0';
+	count = 0;
+	while (memory[i] != '\0' && memory[i] != '\n')
+		line[count++] = memory[i++];
+	if (memory[i] == '\n')
+		line[count++] = memory[i++];
+	line[count] = '\0';
 	return (line);
 }
 
-char	*buffer_scan(int fd, char *final_line)
+char	*read_buffer(int	fd, char	*memory)
 {
 	char	*buffer;
-	int		bytes_scan;
+	int		bytes_read;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
+	if (!buffer)
 		return (NULL);
-	bytes_scan = 1;
-	while (bytes_scan > 0)
+	bytes_read = 1;
+	while (bytes_read > 0)
 	{
-		bytes_scan = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_scan == -1)
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read == -1)
 		{
 			free(buffer);
 			return (NULL);
 		}
-		buffer[bytes_scan] = '\0';
-		final_line = ft_new_strjoin(final_line, buffer);
-		if (has_new_line(final_line))
+		buffer[bytes_read] = '\0';
+		memory = ft_strjoin(memory, buffer);
+		if (find_new_line(memory))
 			break ;
 	}
 	free(buffer);
-	return (final_line);
+	return (memory);
 }
 
 char	*get_next_line(int fd)
 {
-	char			*cut_line;
-	static char		*final_line;
-	
+	static char	*memory;
+	char		final_line;
+
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	final_line = buffer_scan(fd, final_line);
-	if (final_line == NULL)
+	memory = read_buffer(fd, memory);
+	if (!memory)
 		return (NULL);
-	cut_line = clear_save_line(final_line);
-	final_line = delete_clear_line(final_line);
-	return (cut_line);
+	final_line = clear_line(memory);
+	memory = delete_line(memory);
+	return (final_line);
 }
