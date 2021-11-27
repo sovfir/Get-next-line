@@ -6,19 +6,19 @@
 /*   By: gjacinta <gjacinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:11:15 by gjacinta          #+#    #+#             */
-/*   Updated: 2021/11/27 17:54:42 by gjacinta         ###   ########.fr       */
+/*   Updated: 2021/11/27 18:17:45 by gjacinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*delete_line(char	*memory)
+char	*delete_line(char *memory)
 {
-	char	new_memory;
+	char	*new_memory;
 	size_t	i;
-	size_t	count;
+	size_t	c;
 
-	if (!memory)
+	if (memory == NULL)
 		return (NULL);
 	i = 0;
 	while (memory[i] != '\0' && memory[i] != '\n')
@@ -29,16 +29,17 @@ char	*delete_line(char	*memory)
 		return (NULL);
 	}
 	new_memory = malloc(sizeof(char) * (ft_strlen(memory) - i + 1));
-	if (!new_memory)
+	if (new_memory == NULL)
 		return (NULL);
-	count = 0;
+	c = 0;
 	i++;
 	while (memory[i] != '\0')
-		new_memory[count++] = memory[i++];
-	new_memory[count] = '\0';
+		new_memory[c++] = memory[i++];
+	new_memory[c] = '\0';
 	free(memory);
 	return (new_memory);
 }
+
 
 char	*clear_line(char	*memory)
 {
@@ -92,13 +93,13 @@ char	*read_buffer(int	fd, char	*memory)
 
 char	*get_next_line(int fd)
 {
-	static char	*memory;
-	char		final_line;
+	static char		*memory;
+	char			*final_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	memory = read_buffer(fd, memory);
-	if (!memory)
+	if (memory == NULL)
 		return (NULL);
 	final_line = clear_line(memory);
 	memory = delete_line(memory);
