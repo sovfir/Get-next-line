@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gjacinta <gjacinta@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:11:15 by gjacinta          #+#    #+#             */
-/*   Updated: 2021/11/28 16:32:03 by gjacinta         ###   ########.fr       */
+/*   Updated: 2021/11/28 16:43:04 by gjacinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*delete_line(char *memory)
 {
@@ -92,7 +92,7 @@ char	*read_buffer(int fd, char *memory)
 
 char	*get_next_line(int fd)
 {
-	static char		*memory[1024];
+	static char		*memory[_SC_OPEN_MAX];
 	char			*final_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
